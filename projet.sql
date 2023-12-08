@@ -74,7 +74,7 @@ CREATE TABLE categories (
 CREATE TABLE episodes (
     id_episode INT IDENTITY(8001, 1) PRIMARY KEY,
     titre_ep VARCHAR(50) NOT NULL,
-    duree DATE NOT NULL,
+    duree TIME NOT NULL,
     date_de_diffusion DATE NOT NULL,
     id_saison INT,
     FOREIGN KEY(id_saison_) REFERENCES saisons(id_saison_) ON DELETE
