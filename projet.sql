@@ -62,7 +62,39 @@ CREATE ROLE DataScientist;
 
 -- Création du rôle Métier
 CREATE ROLE Metier;
--- Attribution des permissions au rôle Administrateur
+-- Attribution des permissions au différents rôles crees
+-- rôle Data Engineer
+GRANT CREATE TABLE, ALTER, DELETE, INSERT, SELECT, UPDATE TO DataEngineer;
+GRANT CREATE VIEW TO DataEngineer;
+USE master;
+EXECUTE sys.sp_addsrvrolemember @loginame = N'DataEngLogin1', @rolename = N'dbcreator';
+GRANT ALTER ON SCHEMA::[dbo] TO [DataEngineer];
+-- rôle Data Analyst
+GRANT CREATE VIEW, SELECT TO DataAnalyst;
+-- Data Scientist
+GRANT CREATE TABLE, ALTER, DELETE, INSERT, SELECT, UPDATE TO DataScientist;
+GRANT CREATE VIEW TO DataScientist;
+USE master;
+EXECUTE sys.sp_addsrvrolemember @loginame = N'DataSciLogin1', @rolename = N'dbcreator';
+GRANT ALTER ON SCHEMA::[dbo] TO [DataScientist];
+-- rôle Métier
+GRANT SELECT ON SCHEMA::[dbo] TO Metier;
+
+-- attribution des différents rôles aux utilisateurs
+ALTER ROLE Administrateur ADD MEMBER AdminUser1;
+ALTER ROLE Administrateur ADD MEMBER AdminUser2;
+
+ALTER ROLE DataEngineer ADD MEMBER DataEngUser1;
+ALTER ROLE DataEngineer ADD MEMBER DataEngUser2;
+
+ALTER ROLE DataAnalyst ADD MEMBER DataAnalystUser1;
+ALTER ROLE DataAnalyst ADD MEMBER DataAnalystUser2;
+
+ALTER ROLE DataScientist ADD MEMBER DataSciUser1;
+ALTER ROLE DataScientist ADD MEMBER DataSciUser2;
+
+ALTER ROLE Metier ADD MEMBER MetierUser1;
+ALTER ROLE Metier ADD MEMBER MetierUser2;
 
 --creation de la base de données  et les tables
 CREATE DATABASE EntertainmentWorld;
@@ -1288,3 +1320,24 @@ VALUES
     (1010, 3010);
 
 -- The Crown, Drame Historique
+--creation d'une vue que regroupe les informations sur les series, les saisons et les episodes
+CREATE VIEW VueSeriesEpisodes AS
+SELECT 
+    ser.id_serie,
+    ser.titre AS TitreSerie,
+    ser.date_de_creation,
+    ser.pays,
+    ser.langues,
+    sai.numero_de_saison,
+    sai.date_de_debut AS DebutSaison,
+    sai.date_de_fin AS FinSaison,
+    epi.id_episode,
+    epi.titre_ep AS TitreEpisode,
+    epi.duree,
+    epi.date_de_diffusion
+FROM 
+    series ser
+JOIN 
+    saisons sai ON ser.id_serie = sai.id_serie
+JOIN 
+    episodes epi ON sai.id_saison = epi.id_saison;
