@@ -1,4 +1,4 @@
--- SQL SERVER queries for the transversal project Remark: Database used [SQL Server].Creating tables + creating the database Note: ceci n ’ est pas le rapport du projet ! ! --creating the database /this is a comment in sql server
+-- SQL SERVER queries for the transversal project Remark: Database used [SQL Server].
 CREATE DATABASE EntertainmentWorld;
 
 GO
@@ -130,7 +130,7 @@ CREATE TABLE questions (
         NULL
 );
 
--- Reponses Table//this is a comment in SQL //this is a comment in sql server
+-- Reponses Table//this is a comment in SQL 
 CREATE TABLE reponses (
     id_answer INT IDENTITY(12001, 1) PRIMARY KEY,
     reponse VARCHAR(255) NOT NULL,
@@ -153,7 +153,7 @@ CREATE TABLE acteurs_episodes(
     FOREIGN KEY(id_acteur) REFERENCES acteurs_(id_acteur) ON DELETE CASCADE
 );
 
--- Createur_Producteur_Series Table//this is a comment in SQL //this is a comment in sql server 
+-- Createur_Producteur_Series Table//this is a comment in SQL /
 CREATE TABLE createur_producteur_series (
     id_serie INT,
     id_create INT,
@@ -214,7 +214,7 @@ VALUES
         'Anglais'
     ),
     ('Dark', '2017-12-31', 'Allemange', 'Allemand'),
-    ('The Crown', '2016-11-04', 'UK', 'Anglais')  
+    ('The Crown', '2016-11-04', 'UK', 'Anglais'); 
 --Insert data into Utilisateurs Table
 INSERT INTO
     utilisateurs (nom_u, prenom_u, mdp, age, pseudo, sexe)
@@ -418,7 +418,7 @@ VALUES
     ('Thriller'),
     ('Science-Fiction'),
     ('Drame Historique'),
-    ('Surnaturel') 
+    ('Surnaturel'); 
     
 -- Insert data into Saisons Table
 INSERT INTO
@@ -670,7 +670,8 @@ VALUES
     ('The Master', '00:24:00', '2005-11-16', 4026),
     ('The Monster', '00:24:00', '2006-11-23', 4027),
     ('The Duel', '00:24:00', '2007-11-30', 4027),
-    ('The Awakening', '00:24:00', '2007-12-07', 4027) -- Insert data into Notes Table
+    ('The Awakening', '00:24:00', '2007-12-07', 4027);
+     -- Insert data into Notes Table
 INSERT INTO
     notes (
         commentaire,
