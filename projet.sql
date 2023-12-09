@@ -171,7 +171,7 @@ CREATE TABLE series_genres (
     FOREIGN KEY(id_genre) REFERENCES genres(id_genre) ON DELETE CASCADE
 );
 
-Inserting data into the corresponding tables: -- Insert data into Series Table
+--Inserting data into the corresponding tables: -- Insert data into Series Table
 INSERT INTO
     series (titre, date_de_creation, pays, langues)
 VALUES
@@ -214,7 +214,8 @@ VALUES
         'Anglais'
     ),
     ('Dark', '2017-12-31', 'Allemange', 'Allemand'),
-    ('The Crown', '2016-11-04', 'UK', 'Anglais') – Ins ert data into Utilisateurs Table
+    ('The Crown', '2016-11-04', 'UK', 'Anglais')  
+--Insert data into Utilisateurs Table
 INSERT INTO
     utilisateurs (nom_u, prenom_u, mdp, age, pseudo, sexe)
 VALUES
@@ -417,7 +418,9 @@ VALUES
     ('Thriller'),
     ('Science-Fiction'),
     ('Drame Historique'),
-    ('Surnaturel') -- Insert data into Saisons Table
+    ('Surnaturel') 
+    
+-- Insert data into Saisons Table
 INSERT INTO
     saisons (
         date_de_debut,
@@ -903,8 +906,7 @@ VALUES
         8020
     );
 
-Insert
-    data into Createurs Table
+--Insert data into Createurs Table
 INSERT INTO
     createurs (nom, prenom, sexe, id_prod)
 VALUES
@@ -1071,36 +1073,124 @@ VALUES
         2010
     );
 
--- Insert data into Acteurs_Series Table
---again … … … … 
+-- Inserting data into acteurs_episodes
 INSERT INTO
-    Acteurs_series (id_acteur, id_serie)
+    acteurs_episodes (id_episode, id_acteur)
 VALUES
-    (1, 1),
-    -- Assuming id_serie 1, id_genre 1 exist
-    (2, 2),
-    -- Assuming id_serie 2, id_genre 2 exist
-  
-Insert
-   -- again … … … …
+    (8018, 5001),
+    (8018, 5002),
+    (8018, 5003),
+    (8018, 5004),
+    (8018, 5005),
+    (8018, 5006),
+    (8018, 5007),
+    (8018, 5008),
+    (8019, 5001),
+    (8019, 5020),
+    (8019, 5019),
+    (8019, 5010),
+    (8019, 5002),
+    (8020, 5003),
+    (8020, 5004),
+    (8020, 5005),
+    (8020, 5006),
+    (8020, 5007),
+    (8020, 5008),
+    (8021, 5001),
+    (8021, 5020),
+    (8021, 5019),
+    (8021, 5011),
+    (8021, 5002),
+    (8021, 5015),
+    (8022, 5019),
+    (8022, 5018),
+    (8022, 5015),
+    (8022, 5013),
+    (8022, 5012),
+    (8023, 5004),
+    (8023, 5011),
+    (8023, 5010),
+    (8023, 5009),
+    (8023, 5008),
+    (8024, 5004),
+    (8024, 5019),
+    (8024, 5006),
+    (8024, 5018),
+    (8024, 5012),
+    (8025, 5018),
+    (8025, 5012),
+    (8025, 5014),
+    (8025, 5010),
+    (8025, 5011),
+    (8026, 5011),
+    (8026, 5012),
+    (8026, 5014),
+    (8026, 5015),
+    (8026, 5020),
+    (8061, 5020),
+    (8061, 5018),
+    (8061, 5016),
+    (8060, 5007),
+    (8060, 5008),
+    (8059, 5015),
+    (8059, 5014),
+    (8059, 5013),
+    (8058, 5012),
+    (8058, 5011),
+    (8058, 5013),
+    (8057, 5006),
+    (8057, 5013),
+    (8057, 5012),
+    (8056, 5010),
+    (8056, 5012),
+    (8056, 5011),
+    (8055, 5004),
+    (8055, 5019),
+    (8055, 5014),
+    (8052, 5012),
+    (8052, 5010),
+    (8052, 5006),
+    (8050, 5001),
+    (8050, 5016),
+    (8050, 5017),
+    (8049, 5007),
+    (8049, 5015),
+    (8049, 5003),
+    (8035, 5004),
+    (8035, 5002),
+    (8035, 5006),
+    (8032, 5002),
+    (8032, 5001),
+    (8032, 5010),
+    (8037, 5008),
+    (8037, 5015),
+    (8037, 5011),
+    (8029, 5011),
+    (8029, 5015),
+    (8029, 5020);
+
 -- Insert data ito Createur_Producteur_Series Table
-INSERT INTO
-    createur_producteur_series (id_serie, id_create)
-VALUES
-    (1, 1),
-    -- Assuming id_serie 1,  id_create 1 exist
-    (2, 2),
-    -- Assuming id_serie 2,  id_create 2 exist
+INSERT INTO createur_producteur_series (id_serie, id_create) VALUES
+(1001, 10001), -- Breaking Bad, Durand Fabien
+(1002, 10002), -- Death Rate, Brunet Emilie
+(1003, 10003), -- Episodes, Blanc Romain
+(1004, 10004), -- Bleach, Leroux Charlotte
+(1005, 10005), -- Outlander, Lemoine Alexandre
+(1006, 10006), -- One Piece, Marchand Julie
+(1007, 10007), -- Game of Thrones, Dufour Nicolas
+(1008, 10008), -- Stranger Things, Meunier Laura
+(1009, 10009), -- Dark, Rodriguez Christophe
+(1010, 10010); -- The Crown, Da Silva Sara
+t
 
-Insert
-  --  again … … … … -- Insert data into Series_Genres Table
-INSERT INTO
-    series_genres (id_serie, id_genre)
-VALUES
-    (1, 1),
-    -- Assuming id_serie 1, id_genre 1 exist
-    (2, 2),
-    -- Assuming id_serie 2, id_genre 2 exist
-
-Insert
-  --  again … … … …
+INSERT INTO series_genres (id_serie, id_genre) VALUES
+(1001, 3001), -- Breaking Bad, Romance
+(1002, 3002), -- Death Rate, Comodie
+(1003, 3003), -- Episodes, Action
+(1004, 3004), -- Bleach, Fantaisie
+(1005, 3005), -- Outlander, Aventure
+(1006, 3006), -- One Piece, Horreur
+(1007, 3007), -- Game of Thrones, Mystere
+(1008, 3008), -- Stranger Things, Thriller
+(1009, 3009), -- Dark, Science-Fiction
+(1010, 3010); -- The Crown, Drame Historique
