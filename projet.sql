@@ -1,4 +1,70 @@
 -- SQL SERVER queries for the transversal project Remark: Database used [SQL Server].
+--Gestion des utilisateurs et rôles de le base de données
+-- Notez que pour chaque utilisateur, nous devont d’abord créer un LOGIN correspondant : 
+CREATE LOGIN AdminLogin1 WITH PASSWORD = 'AdminLogin1Password123';
+
+CREATE LOGIN AdminLogin2 WITH PASSWORD = 'AdminLogin1Password123';
+
+CREATE LOGIN DataEngLogin1 WITH PASSWORD = 'DataEngLogin1Password123';
+
+CREATE LOGIN DataEngLogin2 WITH PASSWORD = 'DataEngLogin1Password123';
+
+CREATE LOGIN DataAnalystLogin1 WITH PASSWORD = 'DataAnalystLogin1Password123';
+
+CREATE LOGIN DataAnalystLogin2 WITH PASSWORD = 'DataAnalystLogin1Password123';
+
+CREATE LOGIN DataSciLogin1 WITH PASSWORD = 'DataSciLogin1Password123';
+
+CREATE LOGIN DataSciLogin2 WITH PASSWORD = 'DataSciLogin1Password123';
+
+CREATE LOGIN MetierLogin1 WITH PASSWORD = 'MetierLogin1Password123';
+
+CREATE LOGIN MetierLogin2 WITH PASSWORD = 'MetierLogin1Password123';
+
+--Assosier les utilisateurs aux logins
+-- Association de deux utilisateurs pour le rôle Administrateur
+CREATE USER AdminUser1 FOR LOGIN AdminLogin1;
+
+CREATE USER AdminUser2 FOR LOGIN AdminLogin2;
+
+-- Association de deux utilisateurs pour le rôle Data Engineer
+CREATE USER DataEngUser1 FOR LOGIN DataEngLogin1;
+
+CREATE USER DataEngUser2 FOR LOGIN DataEngLogin2;
+
+-- Association de deux utilisateurs pour le rôle Data Analyst
+CREATE USER DataAnalystUser1 FOR LOGIN DataAnalystLogin1;
+
+CREATE USER DataAnalystUser2 FOR LOGIN DataAnalystLogin2;
+
+-- Association de deux utilisateurs pour le rôle Data Scientist
+CREATE USER DataSciUser1 FOR LOGIN DataSciLogin1;
+
+CREATE USER DataSciUser2 FOR LOGIN DataSciLogin2;
+
+-- Association de deux utilisateurs pour le rôle Métier
+CREATE USER MetierUser1 FOR LOGIN MetierLogin1;
+
+CREATE USER MetierUser2 FOR LOGIN MetierLogin2;
+
+--creation des rôles
+-- Création du rôle Administrateur
+CREATE ROLE Administrateur;
+
+-- Création du rôle Data Engineer
+CREATE ROLE DataEngineer;
+
+-- Création du rôle Data Analyst
+CREATE ROLE DataAnalyst;
+
+-- Création du rôle Data Scientist
+CREATE ROLE DataScientist;
+
+-- Création du rôle Métier
+CREATE ROLE Metier;
+-- Attribution des permissions au rôle Administrateur
+
+--creation de la base de données  et les tables
 CREATE DATABASE EntertainmentWorld;
 
 GO
@@ -171,7 +237,8 @@ CREATE TABLE series_genres (
     FOREIGN KEY(id_genre) REFERENCES genres(id_genre) ON DELETE CASCADE
 );
 
---Inserting data into the corresponding tables: -- Insert data into Series Table
+--Inserting data into the corresponding tables:
+-- Insert data into Series Table
 INSERT INTO
     series (titre, date_de_creation, pays, langues)
 VALUES
@@ -214,7 +281,8 @@ VALUES
         'Anglais'
     ),
     ('Dark', '2017-12-31', 'Allemange', 'Allemand'),
-    ('The Crown', '2016-11-04', 'UK', 'Anglais'); 
+    ('The Crown', '2016-11-04', 'UK', 'Anglais');
+
 --Insert data into Utilisateurs Table
 INSERT INTO
     utilisateurs (nom_u, prenom_u, mdp, age, pseudo, sexe)
@@ -418,8 +486,8 @@ VALUES
     ('Thriller'),
     ('Science-Fiction'),
     ('Drame Historique'),
-    ('Surnaturel'); 
-    
+    ('Surnaturel');
+
 -- Insert data into Saisons Table
 INSERT INTO
     saisons (
@@ -671,7 +739,8 @@ VALUES
     ('The Monster', '00:24:00', '2006-11-23', 4027),
     ('The Duel', '00:24:00', '2007-11-30', 4027),
     ('The Awakening', '00:24:00', '2007-12-07', 4027);
-     -- Insert data into Notes Table
+
+-- Insert data into Notes Table
 INSERT INTO
     notes (
         commentaire,
@@ -940,7 +1009,7 @@ VALUES
         2001
     ),
     (
-        'Quel film represente le mieux le mouvement surréaliste ?',
+        'Quel serie represente le mieux le mouvement surréaliste ?',
         'Le surrealisme au cinema',
         '2023-12-06',
         7002,
@@ -954,7 +1023,7 @@ VALUES
         2003
     ),
     (
-        'Quel film illustre le mieux la diversite des paysages geographiques ?',
+        'Quel serie illustre le mieux la diversite des paysages geographiques ?',
         'Diversite geographique au cinema',
         '2023-12-06',
         7004,
@@ -968,7 +1037,7 @@ VALUES
         2005
     ),
     (
-        'Quel film traite de decouvertes medicales importantes ?',
+        'Quel serie traite de decouvertes medicales importantes ?',
         'Decouvertes medicales au cinema',
         '2023-12-06',
         7006,
@@ -982,7 +1051,7 @@ VALUES
         2007
     ),
     (
-        'Quel film sportif est le plus inspirant ?',
+        'Quel serie sportif est le plus inspirant ?',
         'Films sportifs inspirants',
         '2023-12-06',
         7008,
@@ -996,15 +1065,14 @@ VALUES
         2009
     ),
     (
-        'Quel film explique le mieux les crises economiques ?',
+        'Quel serie explique le mieux les crises economiques ?',
         'Crises economiques au cinema',
         '2023-12-06',
         7010,
         2010
     );
 
--- Insert data into Repo
-nses_ Table
+-- Insert data into Reponses table
 INSERT INTO
     reponses (
         reponse,
@@ -1171,27 +1239,52 @@ VALUES
     (8029, 5020);
 
 -- Insert data ito Createur_Producteur_Series Table
-INSERT INTO createur_producteur_series (id_serie, id_create) VALUES
-(1001, 10001), -- Breaking Bad, Durand Fabien
-(1002, 10002), -- Death Rate, Brunet Emilie
-(1003, 10003), -- Episodes, Blanc Romain
-(1004, 10004), -- Bleach, Leroux Charlotte
-(1005, 10005), -- Outlander, Lemoine Alexandre
-(1006, 10006), -- One Piece, Marchand Julie
-(1007, 10007), -- Game of Thrones, Dufour Nicolas
-(1008, 10008), -- Stranger Things, Meunier Laura
-(1009, 10009), -- Dark, Rodriguez Christophe
-(1010, 10010); -- The Crown, Da Silva Sara
-t
+INSERT INTO
+    createur_producteur_series (id_serie, id_create)
+VALUES
+    (1001, 10001),
+    -- Breaking Bad, Durand Fabien
+    (1002, 10002),
+    -- Death Rate, Brunet Emilie
+    (1003, 10003),
+    -- Episodes, Blanc Romain
+    (1004, 10004),
+    -- Bleach, Leroux Charlotte
+    (1005, 10005),
+    -- Outlander, Lemoine Alexandre
+    (1006, 10006),
+    -- One Piece, Marchand Julie
+    (1007, 10007),
+    -- Game of Thrones, Dufour Nicolas
+    (1008, 10008),
+    -- Stranger Things, Meunier Laura
+    (1009, 10009),
+    -- Dark, Rodriguez Christophe
+    (1010, 10010);
 
-INSERT INTO series_genres (id_serie, id_genre) VALUES
-(1001, 3001), -- Breaking Bad, Romance
-(1002, 3002), -- Death Rate, Comodie
-(1003, 3003), -- Episodes, Action
-(1004, 3004), -- Bleach, Fantaisie
-(1005, 3005), -- Outlander, Aventure
-(1006, 3006), -- One Piece, Horreur
-(1007, 3007), -- Game of Thrones, Mystere
-(1008, 3008), -- Stranger Things, Thriller
-(1009, 3009), -- Dark, Science-Fiction
-(1010, 3010); -- The Crown, Drame Historique
+-- The Crown, Da Silva Sara
+t
+INSERT INTO
+    series_genres (id_serie, id_genre)
+VALUES
+    (1001, 3001),
+    -- Breaking Bad, Romance
+    (1002, 3002),
+    -- Death Rate, Comodie
+    (1003, 3003),
+    -- Episodes, Action
+    (1004, 3004),
+    -- Bleach, Fantaisie
+    (1005, 3005),
+    -- Outlander, Aventure
+    (1006, 3006),
+    -- One Piece, Horreur
+    (1007, 3007),
+    -- Game of Thrones, Mystere
+    (1008, 3008),
+    -- Stranger Things, Thriller
+    (1009, 3009),
+    -- Dark, Science-Fiction
+    (1010, 3010);
+
+-- The Crown, Drame Historique
