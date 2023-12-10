@@ -100,11 +100,11 @@ ALTER ROLE Metier ADD MEMBER MetierUser2;
 CREATE DATABASE EntertainmentWorld;
 
 GO
-    -- Use the EntertainmentWorld database this is a comment in sqlsql server
+    -- Use the EntertainmentWorld database 
     USE EntertainmentWorld;
 
 GO
-    ---creating series- Series Table//this is a comment in sqlthis is a comment in sql s
+    ---creating series
     CREATE TABLE series (
         id_serie INT IDENTITY(1001, 1) PRIMARY KEY,
         titre VARCHAR(50) NOT NULL,
@@ -114,7 +114,7 @@ GO
         CONSTRAINT UQ_Titre UNIQUE (titre)
     );
 
--- --creating the utilisateurs Utilisateurs Table//this is a comment in SQL
+-- --creating the utilisateurs Utilisateurs Table in SQL
 CREATE TABLE utilisateurs (
     id_utilisateur INT IDENTITY(2001, 1) PRIMARY KEY,
     nom_u VARCHAR(50) NOT NULL,
@@ -125,14 +125,14 @@ CREATE TABLE utilisateurs (
     sexe VARCHAR(1) NOT NULL
 );
 
--- Genre--creating the genress Table//this is a comment in SQL this 
+-- Genre--creating the genress Table in SQL this 
 CREATE TABLE genres (
     id_genre INT IDENTITY(3001, 1) PRIMARY KEY,
     nom_gen VARCHAR(50) NOT NULL,
     CONSTRAINT UQ_NomGen UNIQUE (nom_gen)
 );
 
--- Sa--creating the saisonsisons Table//this is a comment in SQL  is this is a comment in sql server 
+-- Sa--creating the saisonsisons Table in SQL  is this is a comment in sql server 
 CREATE TABLE saisons (
     id_saison INT IDENTITY(4001, 1) PRIMARY KEY,
     date_de_debut DATE NOT NULL,
@@ -220,6 +220,8 @@ CREATE TABLE questions (
     date_question DATE NOT NULL,
     id_categorie INT,
     id_utilisateur INT,
+    id_serie INT,
+    FOREIGN KEY (id_serie) REFERENCES series(id_serie) ON DELETE SET NULL,
     FOREIGN KEY(id_categorie) REFERENCES categories(id_categorie) ON DELETE
     SET
         NULL,
@@ -260,7 +262,7 @@ CREATE TABLE createur_producteur_series (
     FOREIGN KEY(id_create) REFERENCES createurs(id_create) ON DELETE CASCADE
 );
 
--- Series_Genres Table//this is a comment in SQL //this is a comment 
+-- Series_Genres Table//this is a comment in SQL  
 CREATE TABLE series_genres (
     id_serie INT,
     id_genre INT,
@@ -1038,70 +1040,80 @@ VALUES
         'Mysteres de la physique quantique',
         '2023-12-06',
         7001,
-        2001
+        2001,
+        1001
     ),
     (
         'Quel serie represente le mieux le mouvement surréaliste ?',
         'Le surrealisme au cinema',
         '2023-12-06',
         7002,
-        2002
+        2002,
+        1002
     ),
     (
         'Quelle serie historique est la plus fidele à la realité ?',
         'Fidélite historique des series',
         '2023-12-06',
         7003,
-        2003
+        2003,
+        1003
     ),
     (
         'Quel serie illustre le mieux la diversite des paysages geographiques ?',
         'Diversite geographique au cinema',
         '2023-12-06',
         7004,
-        2004
+        2004,
+        1004
     ),
     (
         'Quelle serie montre l evolution de la technologie a travers les âges ?',
         'Evolution de la technologie dans les series',
         '2023-12-06',
         7005,
-        2005
+        2005,
+        1005
     ),
     (
         'Quel serie traite de decouvertes medicales importantes ?',
         'Decouvertes medicales au cinema',
         '2023-12-06',
         7006,
-        2006
+        2006,
+        1006
     ),
     (
         'Quelle est la serie la plus divertissante de la decennie ?',
         'Serie la plus divertissante',
         '2023-12-06',
         7007,
-        2007
+        2007,
+        1007
     ),
     (
         'Quel serie sportif est le plus inspirant ?',
         'Films sportifs inspirants',
         '2023-12-06',
         7008,
-        2008
+        2008,
+        1008
     ),
     (
         'Quelle serie dépeint le mieux les enjeux politiques actuels ?',
         'Enjeux politiques dans les series',
         '2023-12-06',
         7009,
-        2009
+        2009,
+        1009
     ),
     (
         'Quel serie explique le mieux les crises economiques ?',
         'Crises economiques au cinema',
         '2023-12-06',
         7010,
-        2010
+        2010,
+        1010
     );
 
 -- Insert data into Reponses table
@@ -1341,3 +1353,189 @@ JOIN
     saisons sai ON ser.id_serie = sai.id_serie
 JOIN 
     episodes epi ON sai.id_saison = epi.id_saison;
+
+--les requestes sur les interrogations
+-- 1.Quel est la liste des séries de la base ?
+SELECT 
+    titre
+FROM
+    series;
+-- 2.Combien de pays différents ont créé des séries dans notre base ?
+SELECT COUNT(DISTINCT pays) AS 'Nombre de pays'
+FROM series;
+-- 3.Quels sont les titres des séries originaires du Japon, triés par titre ?
+SELECT titre FROM series WHERE pays = 'Japon';
+--4.Combien y a-t-il de séries originaires de chaque pays ?
+SELECT pays,COUNT(*) as 'nombre de pays' FROM dbo.series GROUP BY pays;
+--5.Combien de séries ont été créés entre 2001 et 2015?
+SELECT COUNT(*) as 'nombre de series' FROM dbo.series WHERE date_de_creation BETWEEN '2001-01-01' AND '2015-12-31';
+--6.Quelles séries sont à la fois du genre « Comédie » et « Science-Fiction » ?
+SELECT titre FROM dbo.series JOIN dbo.series_genres ON dbo.series.id_serie = dbo.series_genres.id_serie WHERE id_genre = 3002 AND id_genre = 3009;
+--7.Quels sont les séries produites par « Spielberg », affichés par date décroissantes?
+SELECT titre FROM dbo.series WHERE id_serie IN (SELECT id_serie FROM dbo.createur_producteur_series WHERE id_create IN (SELECT id_prod FROM dbo.producteurs WHERE nom = 'Spielberg')) ORDER BY date_de_creation DESC;
+--8.Afficher les séries Américaines par ordre de nombre de saisons croissant?
+SELECT 
+    ser.titre,
+    COUNT(sai.id_saison) AS 'Nombre de saisons'
+FROM
+    series ser
+JOIN
+    saisons sai ON ser.id_serie = sai.id_serie
+WHERE
+    ser.pays = 'Etats-Unis'
+GROUP BY    
+    ser.titre   
+ORDER BY
+    COUNT(sai.id_saison) ASC;
+--9.Quelle série a le plus d’épisodes ?
+-- using joins to get the number of episodes for each serie
+SELECT 
+    ser.titre,
+    COUNT(epi.id_episode) AS 'Nombre d episodes'
+FROM
+    series ser
+JOIN
+    saisons sai ON ser.id_serie = sai.id_serie
+JOIN
+    episodes epi ON sai.id_saison = epi.id_saison
+GROUP BY
+    ser.titre
+ORDER BY
+    COUNT(epi.id_episode) DESC;
+
+-- 10.La série « Big Bang Theory » est-elle plus appréciée des hommes ou des femmes en utilisant une jointure?
+SELECT 
+    ser.titre,
+    utilisateurs.sexe,
+    COUNT(notes.evaluation) AS 'nombre des notes'
+FROM
+    series ser
+JOIN
+    notes ON ser.id_serie = notes.id_serie
+JOIN
+    utilisateurs ON notes.id_utilisateur = utilisateurs.id_utilisateur
+WHERE
+    ser.titre = 'Big Bang Theory'   
+GROUP BY
+    ser.titre,
+    utilisateurs.sexe
+ORDER BY
+    COUNT(notes.id_utilisateur) DESC;
+
+--11.Affichez les séries qui ont une note moyenne inférieure à 5, classé par note.
+SELECT 
+    ser.titre,
+    AVG(notes.evaluation) AS 'note moyenne'
+FROM
+    series ser
+JOIN
+    notes ON ser.id_serie = notes.id_serie
+GROUP BY
+    ser.titre
+HAVING
+    AVG(notes.evaluation) < 5
+ORDER BY
+    AVG(notes.evaluation) DESC;
+--12.Pour chaque série, afficher le commentaire correspondant à la meilleure note.
+SELECT 
+    ser.titre,
+    notes.commentaire,
+    MAX(notes.evaluation) AS 'meilleure note'
+FROM    
+    series ser
+JOIN
+    notes ON ser.id_serie = notes.id_serie
+GROUP BY
+    ser.titre,
+    notes.commentaire
+ORDER BY
+    MAX(notes.evaluation) DESC;
+--13.Affichez les séries qui ont une note moyenne sur leurs épisodes supérieure à 8.
+SELECT 
+    ser.titre,
+    AVG(notes.evaluation) AS 'note moyenne'
+FROM
+    series ser
+JOIN
+    notes ON ser.id_serie = notes.id_serie
+GROUP BY
+    ser.titre
+HAVING
+    AVG(notes.evaluation) > 8
+ORDER BY
+    AVG(notes.evaluation) DESC;
+--14.Afficher le nombre moyen d’épisodes des séries avec l’acteur « Bryan Cranston ».
+SELECT 
+    AVG(CAST(epi.id_episode AS FLOAT)) AS 'nombre moyen d episodes'
+FROM
+    series ser
+JOIN
+    saisons sai ON ser.id_serie = sai.id_serie
+JOIN
+    episodes epi ON sai.id_saison = epi.id_saison
+JOIN
+    acteurs_episodes act_epi ON epi.id_episode = act_epi.id_episode
+JOIN
+    acteurs act ON act_epi.id_acteur = act.id_acteur
+WHERE
+    act.nom_act = 'Cranston'
+    AND act.prenom_act = 'Bryan';
+--15.Quels acteurs ont réalisé des épisodes de série utilise une requête simple?
+???????
+--16.Quels acteurs ont joué ensemble dans plus de 80% des épisodes d’une série ?
+SELECT 
+    act.nom_act,
+    act.prenom_act,
+    COUNT(epi.id_episode) AS 'nombre d episodes'
+FROM
+    acteurs act
+JOIN
+    acteurs_episodes act_epi ON act.id_acteur = act_epi.id_acteur
+JOIN
+    episodes epi ON act_epi.id_episode = epi.id_episode
+GROUP BY
+    act.nom_act,
+    act.prenom_act
+HAVING
+    COUNT(epi.id_episode) > 80
+ORDER BY
+    COUNT(epi.id_episode) DESC;
+
+--17.Quels acteurs ont joué dans tous les épisodes de la série « Breaking Bad » ?
+?????????????
+--18.Quels utilisateurs ont donné une note à chaque série de la base
+SELECT 
+    utilisateurs.nom,
+    utilisateurs.prenom,
+    COUNT(notes.id_serie) AS 'nombre de series'
+FROM
+    utilisateurs
+JOIN
+    notes ON utilisateurs.id_utilisateur = notes.id_utilisateur
+GROUP BY
+    utilisateurs.nom,
+    utilisateurs.prenom
+HAVING
+    COUNT(notes.id_serie) = (SELECT COUNT(*) FROM dbo.series)
+ORDER BY
+    COUNT(notes.id_serie) DESC;
+--19.Pour chaque message, affichez son niveau et si possible le titre de la série en question.
+SELECT 
+    questions.titre_question,
+    questions.question,
+    questions.date_question,
+    categories.nom_cat,
+    series.titre
+FROM
+    questions
+JOIN
+    categories ON questions.id_categorie = categories.id_categorie
+JOIN
+    series ON questions.id_serie = series.id_serie;
+--20.Les messages initiés par « Azrod95 » génèrent combien de réponses en moyenne ?
+
+-
+
+
+
+
