@@ -114,7 +114,7 @@ GO
         CONSTRAINT UQ_Titre UNIQUE (titre)
     );
 
--- --creating the utilisateurs Utilisateurs Table in SQL
+-- --creating the utilisateurs
 CREATE TABLE utilisateurs (
     id_utilisateur INT IDENTITY(2001, 1) PRIMARY KEY,
     nom_u VARCHAR(50) NOT NULL,
@@ -125,14 +125,14 @@ CREATE TABLE utilisateurs (
     sexe VARCHAR(1) NOT NULL
 );
 
--- Genre--creating the genress Table in SQL this 
+-- Genres Table 
 CREATE TABLE genres (
     id_genre INT IDENTITY(3001, 1) PRIMARY KEY,
     nom_gen VARCHAR(50) NOT NULL,
     CONSTRAINT UQ_NomGen UNIQUE (nom_gen)
 );
 
--- Sa--creating the saisonsisons Table in SQL  is this is a comment in sql server 
+-- Sa--creating the saisons 
 CREATE TABLE saisons (
     id_saison INT IDENTITY(4001, 1) PRIMARY KEY,
     date_de_debut DATE NOT NULL,
@@ -144,7 +144,7 @@ CREATE TABLE saisons (
         NULL
 );
 
---creating the acteurseurs Table//this is a comment in SQL
+--creating the acteurs
 CREATE TABLE acteurs (
     id_acteur INT IDENTITY(5001, 1) PRIMARY KEY,
     nom_act VARCHAR(50) NOT NULL,
@@ -153,7 +153,7 @@ CREATE TABLE acteurs (
     age INT NOT NULL CHECK (age >= 18)
     AND (age <= 65)
 );
-
+--table producteurs
 CREATE TABLE producteurs (
     id_prod INT IDENTITY(6001, 1) PRIMARY KEY,
     nom VARCHAR(50) NOT NULL,
@@ -161,14 +161,14 @@ CREATE TABLE producteurs (
     sexe VARCHAR(2) NOT NULL
 );
 
--- Categories Table//this is a comment in SQL omment in sql server
+-- Categories Table
 CREATE TABLE categories (
     id_categorie INT IDENTITY(7001, 1) PRIMARY KEY,
     nom_cat VARCHAR(255) NOT NULL,
     CONSTRAINT UQ_NomCat UNIQUE (nom_cat)
 );
 
--- Episodes Table//this is a comment in SQL //this is a comment in sql server
+-- Episodes Table
 CREATE TABLE episodes (
     id_episode INT IDENTITY(8001, 1) PRIMARY KEY,
     titre_ep VARCHAR(50) NOT NULL,
@@ -180,7 +180,7 @@ CREATE TABLE episodes (
         NULL
 );
 
--- Notes Table//this is a comment in SQL //this is a comment in sql server 
+-- Notes Table
 CREATE TABLE notes (
     id_note INT IDENTITY(9001, 1) PRIMARY KEY,
     commentaire VARCHAR(255) NOT NULL,
@@ -200,7 +200,7 @@ CREATE TABLE notes (
         NULL
 );
 
--- Createurs Table//this is a comment in SQL //this is a comment in sql server
+-- Createurs Table
 CREATE TABLE createurs (
     id_create INT IDENTITY(10001, 1) PRIMARY KEY,
     nom VARCHAR(50) NOT NULL,
@@ -212,7 +212,7 @@ CREATE TABLE createurs (
         NULL
 );
 
--- Questions Table//this is a comment in SQL his is a comment in sql server
+-- Questions Table
 CREATE TABLE questions (
     id_question INT IDENTITY(11001, 1) PRIMARY KEY,
     question TEXT NOT NULL,
@@ -230,7 +230,7 @@ CREATE TABLE questions (
         NULL
 );
 
--- Reponses Table//this is a comment in SQL 
+-- Reponses Table 
 CREATE TABLE reponses (
     id_answer INT IDENTITY(12001, 1) PRIMARY KEY,
     reponse VARCHAR(255) NOT NULL,
@@ -253,7 +253,7 @@ CREATE TABLE acteurs_episodes(
     FOREIGN KEY(id_acteur) REFERENCES acteurs_(id_acteur) ON DELETE CASCADE
 );
 
--- Createur_Producteur_Series Table//this is a comment in SQL /
+-- Createur_Producteur_Series Table
 CREATE TABLE createur_producteur_series (
     id_serie INT,
     id_create INT,
@@ -262,7 +262,7 @@ CREATE TABLE createur_producteur_series (
     FOREIGN KEY(id_create) REFERENCES createurs(id_create) ON DELETE CASCADE
 );
 
--- Series_Genres Table//this is a comment in SQL  
+-- Series_Genres Table
 CREATE TABLE series_genres (
     id_serie INT,
     id_genre INT,
@@ -536,7 +536,6 @@ VALUES
     ('2022-01-04', '2021-06-30', 3, 1001),
     ('2022-07-01', '2022-12-31', 4, 1001),
     ('2021-01-01', '2021-02-28', 1, 1002),
-    -- Corrected date
     ('2022-02-01', '2022-10-08', 2, 1002),
     ('2023-01-10', '2023-06-20', 3, 1002),
     ('2011-01-01', '2011-12-31', 1, 1003),
@@ -545,7 +544,6 @@ VALUES
     ('2014-07-01', '2014-12-31', 4, 1003),
     ('2004-01-01', '2004-12-31', 1, 1004),
     ('2005-01-01', '2005-11-30', 2, 1004),
-    -- Corrected date
     ('2006-01-04', '2007-06-16', 3, 1004),
     ('2014-01-01', '2014-12-31', 1, 1005),
     ('2015-01-01', '2015-12-31', 2, 1005),
@@ -571,7 +569,6 @@ VALUES
     ('2017-01-01', '2017-12-31', 3, 1010),
     ('2018-01-04', '2018-06-30', 4, 1010);
 
--- Corrected date
 -- Insert data into Acteurs Table
 INSERT INTO
     acteurs (nom_act, prenom_act, sexe, age)
@@ -1533,6 +1530,7 @@ JOIN
 JOIN
     series ON questions.id_serie = series.id_serie;
 --20.Les messages initiés par « Azrod95 » génèrent combien de réponses en moyenne ?
+
 
 -
 
