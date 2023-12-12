@@ -55,7 +55,7 @@ Pour finir, on souhaite que les que les utilisateurs puissent converser entre eu
 
 ### 2. La création
 
-* Créez un script creation.sql qui crée les tables du modèle relationnel.
+* Créez un script `creation.sql` qui crée les tables du modèle relationnel.
 * Ajoutez aux tables toutes les contraintes qui vous semblent pertinentes pour une bonne gestion de cette base.
 * Expliquez et justifiez vos choix.
 

@@ -1530,9 +1530,20 @@ JOIN
 JOIN
     series ON questions.id_serie = series.id_serie;
 --20.Les messages initiés par « Azrod95 » génèrent combien de réponses en moyenne ?
+SELECT 
+    questions.question,
+    COUNT(reponses.id_question) AS 'nombre de reponses'
+FROM
+    questions
+JOIN
+    reponses ON questions.id_question = reponses.id_question
+JOIN
+    utilisateurs ON questions.id_utilisateur = utilisateurs.id_utilisateur
+WHERE
+    utilisateurs.pseudo = 'Azrod95' 
+GROUP BY
+    questions.question;
 
-
--
 
 
 
