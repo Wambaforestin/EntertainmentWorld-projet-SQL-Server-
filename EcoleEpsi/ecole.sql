@@ -882,3 +882,5 @@ La contrainte horizontale est vérifiée pour chaque ligne de la table, alors qu
 --II.Triggers
 
 --1.Créez un trigger permettant de vérifier la contrainte : « Le salaire d’un Professeur ne peut pas diminuer ». Ce trigger doit être déclenché avant la modification d’un salaire.notéque aucune transactions a été créé.
+ -- ??????????
+--3.
