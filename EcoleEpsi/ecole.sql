@@ -872,5 +872,5 @@ ALTER TABLE
 ALTER TABLE
     PROFESSEURS ADD CONSTRAINT CK_PROFESSEURS_SALAIRE CHECK(Salaire_base < Salaire_actuel);
 --1.4 Contrainte verticale : Le salaire d’un professeur ne doit pas dépasser le double de la moyenne des salaires des enseignants de la même spécialité.
-
-
+ALTER TABLE
+    PROFESSEURS ADD CONSTRAINT CK_PROFESSEURS_SALAIRE2 CHECK(Salaire_actuel < 2 * (SELECT AVG(Salaire_actuel) FROM PROFESSEURS WHERE SPECIALITE = PROFESSEURS.SPECIALITE));
