@@ -233,6 +233,12 @@ VALUES
         'M'
     );
 
+--to hash  the password(mdp) of the different utilisateurs : 
+UPDATE
+    utilisateurs
+SET
+    mdp = HASHBYTES('SHA2_512', CONVERT(varbinary(MAX), mdp));
+
 -- Insert data into Genres Table
 INSERT INTO
     genres (nom_gen)
@@ -1054,10 +1060,11 @@ VALUES
     (1009, 3009),
     -- Dark, Science-Fiction
     (1010, 3010);
+
 -- The Crown, Drame Historique
 --creation d'une vue que regroupe les informations sur les series, les saisons et les episodes
 CREATE VIEW VueSeriesEpisodes AS
-SELECT 
+SELECT
     ser.id_serie,
     ser.titre AS TitreSerie,
     ser.date_de_creation,
@@ -1070,9 +1077,7 @@ SELECT
     epi.titre_ep AS TitreEpisode,
     epi.duree,
     epi.date_de_diffusion
-FROM 
+FROM
     series ser
-JOIN 
-    saisons sai ON ser.id_serie = sai.id_serie
-JOIN 
-    episodes epi ON sai.id_saison = epi.id_saison;
+    JOIN saisons sai ON ser.id_serie = sai.id_serie
+    JOIN episodes epi ON sai.id_saison = epi.id_saison;

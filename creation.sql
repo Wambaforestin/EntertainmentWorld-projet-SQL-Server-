@@ -55,6 +55,7 @@ CREATE TABLE acteurs (
     age INT NOT NULL CHECK (age >= 18)
     AND (age <= 65)
 );
+
 --table producteurs
 CREATE TABLE producteurs (
     id_prod INT IDENTITY(6001, 1) PRIMARY KEY,
@@ -123,8 +124,10 @@ CREATE TABLE questions (
     id_categorie INT,
     id_utilisateur INT,
     id_serie INT,
-    FOREIGN KEY (id_serie) REFERENCES series(id_serie) ON DELETE SET NULL,
-    FOREIGN KEY(id_categorie) REFERENCES categories(id_categorie) ON DELETE
+    FOREIGN KEY (id_serie) REFERENCES series(id_serie) ON DELETE
+    SET
+        NULL,
+        FOREIGN KEY(id_categorie) REFERENCES categories(id_categorie) ON DELETE
     SET
         NULL,
         FOREIGN KEY(id_utilisateur) REFERENCES utilisateurs(id_utilisateur) ON DELETE

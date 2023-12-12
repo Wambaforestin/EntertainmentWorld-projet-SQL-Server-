@@ -861,6 +861,8 @@ Values
 -- Reponse des interrogations
 -- =========================================
 
+--I.Contraintes
+
 --1.Essayez de modifier les tables pour ajouter les contraintes suivantes en SQL :
 --1.1 La note d’un étudiant doit être comprise entre 0 et 20.
 ALTER TABLE
@@ -874,3 +876,9 @@ ALTER TABLE
 --1.4 Contrainte verticale : Le salaire d’un professeur ne doit pas dépasser le double de la moyenne des salaires des enseignants de la même spécialité.
 ALTER TABLE
     PROFESSEURS ADD CONSTRAINT CK_PROFESSEURS_SALAIRE2 CHECK(Salaire_actuel < 2 * (SELECT AVG(Salaire_actuel) FROM PROFESSEURS WHERE SPECIALITE = PROFESSEURS.SPECIALITE));
+--2.Que constatez-vous?
+La contrainte horizontale est vérifiée pour chaque ligne de la table, alors que la contrainte verticale est vérifiée pour la table entière.
+
+--II.Triggers
+
+--1.Créez un trigger permettant de vérifier la contrainte : « Le salaire d’un Professeur ne peut pas diminuer ». Ce trigger doit être déclenché avant la modification d’un salaire.notéque aucune transactions a été créé.
