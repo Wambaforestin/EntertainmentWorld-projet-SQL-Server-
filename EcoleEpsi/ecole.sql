@@ -941,15 +941,81 @@ AS
             WHERE NUM_PROF = deleted.NUM_PROF
         END
     END
---3.1 
+--III.Sécurite: enregistrement des acces
+--1.1 Créez la table suivante :
+-- CREATE TABLE AUDIT_RESULTATS (
+--     UTILISATEUR VARCHAR(50),
+--     DATE_MAJ DATETIME,
+--     DESC_MAJ VARCHAR(20),
+--     NUM_ELEVE INT NOT NULL,
+--     NUM_COURS INT NOT NULL,
+--     POINTS INT
+-- );
+-- Créez un trigger qui met à jours la table audit_resultats à chaque modification de la table RÉSULTAT. Il faut donner l’utilisateur qui a fait la modification (USER), la date de la modification et une description de la modification (‘INSERT’, ‘DELETE’, ‘NOUVEAU’, ‘ANCIEN’). Par exemple pour une insertion :
+CREATE TRIGGER TRG_RESULTATS_AUDIT
+ON RESULTATS
+FOR INSERT, UPDATE, DELETE
+AS
+    DECLARE @user VARCHAR(50)
+    SET @user = USER_NAME()
+    IF EXISTS(SELECT * FROM inserted)
+    BEGIN
+        INSERT INTO AUDIT_RESULTATS
+        VALUES (@user, GETDATE(), 'INSERT', inserted.NUM_ELEVE, inserted.NUM_COURS, inserted.POINTS)
+    END
+    IF EXISTS(SELECT * FROM deleted)
+    BEGIN
+        INSERT INTO AUDIT_RESULTATS
+        VALUES (@user, GETDATE(), 'DELETE', deleted.NUM_ELEVE, deleted.NUM_COURS, deleted.POINTS)
+    END
+    IF EXISTS(SELECT * FROM inserted) AND EXISTS(SELECT * FROM deleted)
+    BEGIN
+        INSERT INTO AUDIT_RESULTATS
+        VALUES (@user, GETDATE(), 'UPDATE', inserted.NUM_ELEVE, inserted.NUM_COURS, inserted.POINTS)
+    END
 
-
---Revision conception exploitation de BD
--- OLAP : Online Analytical Processing
--- OLTP : Online Transaction Processing
--- Differece entre OLAP et OLTP
--- OLAP : processus d'analyse de données, les données sont stockées dans un datawarehouse.
--- OLTP : processus de transaction, les données sont stockées dans une base de données opérationnelle .
--- Datawarehouse : base de données qui stocke les données d'une entreprise, elle est utilisée pour l'analyse et la prise de décision.
--- ETL : Ectraction, Transformation, Loading    
--- ELT : Extraction, Loading, Transformation
+-- INSERT INTO audit_resultats
+-- VALUES (USER_NAME(), GETDATE(), 'INSERT', INSERTED.NUM_ELEVE, INSERTED.NUM_COURS, INSERTED.POINTS);
+-- Confidentialité: On souhaite que seul l’utilisateur ‘GrandChef’ puisse augmenter les salaires des professeurs de plus de 20%. Le trigger doit retourner une erreur (No -20002) et le message ‘Modification interdite’ si la condition n’est pas respectée.
+-- Fonctions et procédures
+-- Créez une fonction fn_moyenne calculant la moyenne d’un étudiant passé en paramètre.
+CREATE FUNCTION fn_moyenne (@num_eleve INT)
+RETURNS FLOAT
+AS
+BEGIN
+    DECLARE @moy FLOAT
+    SELECT @moy = AVG(POINTS)
+    FROM RESULTATS
+    WHERE NUM_ELEVE = @num_eleve
+    RETURN @moy
+END
+-- Créez une procédure pr_resultat permettant d’afficher la moyenne de chaque élève avec la mention adéquate : échec, passable, assez bien, bien, très bien.
+CREATE PROCEDURE pr_resultat
+AS
+    DECLARE @num_eleve INT
+    DECLARE @moy FLOAT
+    DECLARE @mention VARCHAR(20)
+    DECLARE cur CURSOR FOR
+        SELECT NUM_ELEVE
+        FROM RESULTATS
+        GROUP BY NUM_ELEVE
+    OPEN cur
+    FETCH NEXT FROM cur INTO @num_eleve
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        SELECT @moy = fn_moyenne(@num_eleve)
+        IF @moy < 8
+            SET @mention = 'Echec'
+        ELSE IF @moy < 10
+            SET @mention = 'Passable'
+        ELSE IF @moy < 12
+            SET @mention = 'Assez bien'
+        ELSE IF @moy < 14
+            SET @mention = 'Bien'
+        ELSE
+            SET @mention = 'Très bien'
+        PRINT 'L''élève ' + CAST(@num_eleve AS VARCHAR(10)) + ' a une moyenne de ' + CAST(@moy AS VARCHAR(10)) + ' et a donc la mention ' + @mention
+        FETCH NEXT FROM cur INTO @num_eleve
+    END
+    CLOSE cur
+    DEALLOCATE cur
