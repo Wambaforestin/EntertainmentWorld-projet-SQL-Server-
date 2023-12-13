@@ -881,6 +881,75 @@ La contrainte horizontale est vérifiée pour chaque ligne de la table, alors qu
 
 --II.Triggers
 
---1.Créez un trigger permettant de vérifier la contrainte : « Le salaire d’un Professeur ne peut pas diminuer ». Ce trigger doit être déclenché avant la modification d’un salaire.notéque aucune transactions a été créé.
- -- ??????????
---3.
+--1.Créez un trigger permettant de vérifier la contrainte : « Le salaire d’un Professeur ne peut pas diminuer ». Ce trigger doit être déclenché avant la modification d’un salaire.noté que aucune transactions a été créé.
+CREATE TRIGGER TRG_PROFESSEURS_SALAIRE
+ON PROFESSEURS
+FOR UPDATE
+AS
+    IF UPDATE(SALAIRE_ACTUEL)
+    BEGIN
+        IF EXISTS(SELECT * FROM inserted WHERE Salaire_actuel < deleted.Salaire_actuel)
+        BEGIN
+            ROLLBACK TRANSACTION
+            RAISERROR('Le salaire ne peut pas diminuer', 16, 1)
+        END
+    END
+--2.Gestion automatique de la redondance
+--2.1 Créez la table suivante :
+-- CREATE TABLE PROF_SPECIALITE (
+--     SPECIALITE VARCHAR(20), 
+--     NB_PROFESSEURS NUMBER);
+--2.2Créez un trigger permettant de remplir et mettre à jour automatiquement cette table suite à chaque opération de MAJ (insertion, suppression, modification) sur la table des professeurs.
+CREATE TRIGGER TRG_PROFESSEURS_SPECIALITE
+ON PROFESSEURS
+FOR INSERT, UPDATE, DELETE
+AS
+    IF UPDATE(SPECIALITE)
+    BEGIN
+        IF EXISTS(SELECT * FROM inserted)
+        BEGIN
+            UPDATE PROF_SPECIALITE
+            SET NB_PROFESSEURS = NB_PROFESSEURS + 1
+            WHERE SPECIALITE = inserted.SPECIALITE
+        END
+        IF EXISTS(SELECT * FROM deleted)
+        BEGIN
+            UPDATE PROF_SPECIALITE
+            SET NB_PROFESSEURS = NB_PROFESSEURS - 1
+            WHERE SPECIALITE = deleted.SPECIALITE
+        END
+    END
+--3.Mise à jour en cascade : Créez un trigger qui met à jour la table CHARGE lorsqu’on supprime un professeur dans la table PROFESSEUR ou que l’on change son numéro.
+CREATE TRIGGER TRG_PROFESSEURS_CHARGE
+ON PROFESSEURS
+FOR DELETE, UPDATE
+AS
+    IF UPDATE(NUM_PROF)
+    BEGIN
+        IF EXISTS(SELECT * FROM deleted)
+        BEGIN
+            UPDATE CHARGE
+            SET NUM_PROF = inserted.NUM_PROF
+            WHERE NUM_PROF = deleted.NUM_PROF
+        END
+    END
+    ELSE
+    BEGIN
+        IF EXISTS(SELECT * FROM deleted)
+        BEGIN
+            DELETE FROM CHARGE
+            WHERE NUM_PROF = deleted.NUM_PROF
+        END
+    END
+--3.1 
+
+
+--Revision conception exploitation de BD
+-- OLAP : Online Analytical Processing
+-- OLTP : Online Transaction Processing
+-- Differece entre OLAP et OLTP
+-- OLAP : processus d'analyse de données, les données sont stockées dans un datawarehouse.
+-- OLTP : processus de transaction, les données sont stockées dans une base de données opérationnelle .
+-- Datawarehouse : base de données qui stocke les données d'une entreprise, elle est utilisée pour l'analyse et la prise de décision.
+-- ETL : Ectraction, Transformation, Loading    
+-- ELT : Extraction, Loading, Transformation

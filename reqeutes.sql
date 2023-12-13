@@ -171,7 +171,15 @@ WHERE
     AND act.prenom_act = 'Bryan';
 
 --15.Quels acteurs ont réalisé des épisodes de série utilise une requête simple?
-? ? ? ? ? ? ? 
+SELECT
+    act.nom_act,
+    act.prenom_act
+FROM
+    acteurs act
+    JOIN acteurs_episodes act_epi ON act.id_acteur = act_epi.id_acteur
+    JOIN episodes epi ON act_epi.id_episode = epi.id_episode
+WHERE
+    epi.id_realisateur = act.id_acteur; 
 --16.Quels acteurs ont joué ensemble dans plus de 80% des épisodes d’une série ?
 SELECT
     act.nom_act,
@@ -190,7 +198,33 @@ ORDER BY
     COUNT(epi.id_episode) DESC;
 
 --17.Quels acteurs ont joué dans tous les épisodes de la série « Breaking Bad » ?
-? ? ? ? ? ? ? ? ? ? ? ? ? 
+SELECT
+    act.nom_act,
+    act.prenom_act,
+    COUNT(epi.id_episode) AS 'nombre d episodes'
+FROM
+    acteurs act
+    JOIN acteurs_episodes act_epi ON act.id_acteur = act_epi.id_acteur
+    JOIN episodes epi ON act_epi.id_episode = epi.id_episode
+    JOIN saisons sai ON epi.id_saison = sai.id_saison
+    JOIN series ser ON sai.id_serie = ser.id_serie
+WHERE
+    ser.titre = 'Breaking Bad'  
+GROUP BY
+    act.nom_act,
+    act.prenom_act
+HAVING
+    COUNT(epi.id_episode) = (
+        SELECT
+            COUNT(*)
+        FROM
+            dbo.episodes
+            JOIN dbo.saisons ON dbo.episodes.id_saison = dbo.saisons.id_saison
+            JOIN dbo.series ON dbo.saisons.id_serie = dbo.series.id_serie
+        WHERE
+            dbo.series.titre = 'Breaking Bad'
+    );
+    
 --18.Quels utilisateurs ont donné une note à chaque série de la base
 SELECT
     utilisateurs.nom,
